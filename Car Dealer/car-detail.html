@@ -1,0 +1,691 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>تفاصيل السيارة - المسلمى للسيارات معرض السيارات الفاخرة</title>
+    <link rel="stylesheet" href="css/styles.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/swiper@10/swiper-bundle.min.css" />
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        /* Additional Car Detail Page Specific Styles */
+        .gallery-main {
+            height: 400px;
+            margin-bottom: 10px;
+        }
+        
+        .gallery-main .swiper-slide {
+            height: 100%;
+        }
+        
+        .gallery-main .swiper-slide img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+        
+        .gallery-thumbs {
+            height: 100px;
+            margin-top: 10px;
+        }
+        
+        .gallery-thumbs .swiper-slide {
+            height: 100%;
+            cursor: pointer;
+            opacity: 0.4;
+            transition: opacity 0.3s;
+        }
+        
+        .gallery-thumbs .swiper-slide-thumb-active {
+            opacity: 1;
+        }
+        
+        .gallery-thumbs .swiper-slide img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+        
+        .gallery-controls {
+            display: flex;
+            justify-content: center;
+            margin-top: 1rem;
+            gap: 1rem;
+        }
+        
+        .gallery-button {
+            background-color: var(--primary-color);
+            color: white;
+            border: none;
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            cursor: pointer;
+            transition: var(--transition);
+        }
+        
+        .gallery-button:hover {
+            background-color: #0d5bba;
+            transform: translateY(-2px);
+        }
+        
+        .gallery-counter {
+            display: flex;
+            align-items: center;
+            font-weight: 500;
+        }
+        
+        .fullscreen-gallery {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.9);
+            z-index: 1000;
+        }
+        
+        .fullscreen-gallery .swiper-slide {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            height: 100vh;
+        }
+        
+        .fullscreen-gallery img {
+            max-width: 90%;
+            max-height: 90vh;
+            object-fit: contain;
+        }
+        
+        .close-fullscreen {
+            position: absolute;
+            top: 20px;
+            right: 20px;
+            color: white;
+            font-size: 24px;
+            cursor: pointer;
+            z-index: 1001;
+        }
+        
+        .fullscreen-gallery .swiper-button-next,
+        .fullscreen-gallery .swiper-button-prev {
+            color: white;
+        }
+        
+        .fullscreen-controls {
+            position: absolute;
+            bottom: 20px;
+            left: 50%;
+            transform: translateX(-50%);
+            display: flex;
+            gap: 1rem;
+            z-index: 1001;
+        }
+        
+        .fullscreen-button {
+            background: rgba(255, 255, 255, 0.2);
+            border: none;
+            color: white;
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            cursor: pointer;
+            transition: background 0.3s;
+        }
+        
+        .fullscreen-button:hover {
+            background: rgba(255, 255, 255, 0.4);
+        }
+    </style>
+</head>
+<body>
+    <!-- Header Section -->
+    <header>
+        <div class="container">
+            <div class="logo">
+                <h1>المسلمي للسيارات</h1>
+            </div>
+            <nav>
+                <ul class="nav-links">
+                    <li><a href="index.html">الرئيسية</a></li>
+                    <li><a href="inventory.html">المخزون</a></li>
+                    <li><a href="index.html#services">الخدمات</a></li>
+                    <li><a href="index.html#about">من نحن</a></li>
+                    <li><a href="index.html#testimonials">آراء العملاء</a></li>
+                    <li><a href="index.html#contact" class="btn-primary">تواصل معنا</a></li>
+                </ul>
+                <div class="hamburger">
+                    <span class="bar"></span>
+                    <span class="bar"></span>
+                    <span class="bar"></span>
+                </div>
+            </nav>
+        </div>
+    </header>
+
+    <!-- Car Detail Section -->
+    <section class="car-detail-container">
+        <div class="container">
+            <div class="car-detail-grid">
+                <div class="car-gallery">
+                    <!-- Main Swiper -->
+                    <div class="swiper gallery-main">
+                        <div class="swiper-wrapper">
+                            <!-- Images will be loaded dynamically via JavaScript -->
+                        </div>
+                        <div class="swiper-button-next"></div>
+                        <div class="swiper-button-prev"></div>
+                    </div>
+                    
+                    <!-- Thumbs Swiper -->
+                    <div class="swiper gallery-thumbs">
+                        <div class="swiper-wrapper">
+                            <!-- Thumbnails will be loaded dynamically via JavaScript -->
+                        </div>
+                    </div>
+                    
+                    <!-- Gallery Controls -->
+                    <div class="gallery-controls">
+                        <button class="gallery-button gallery-prev">
+                            <i class="fas fa-chevron-right"></i>
+                        </button>
+                        <div class="gallery-counter">
+                            <span id="current-slide">1</span> / <span id="total-slides">4</span>
+                        </div>
+                        <button class="gallery-button gallery-next">
+                            <i class="fas fa-chevron-left"></i>
+                        </button>
+                        <button class="gallery-button gallery-fullscreen">
+                            <i class="fas fa-expand"></i>
+                        </button>
+                    </div>
+                </div>
+                
+                <div class="car-info">
+                    <h1 id="car-title">جاري تحميل تفاصيل السيارة...</h1>
+                    <span class="car-price-tag" id="car-price">£0</span>
+                    
+                    <div class="car-meta">
+                        <div class="car-meta-item">
+                            <i class="fas fa-calendar"></i>
+                            <span id="car-year">الموديل</span>
+                        </div>
+                        <div class="car-meta-item">
+                            <i class="fas fa-tachometer-alt"></i>
+                            <span id="car-mileage">المسافة المقطوعة</span>
+                        </div>
+                        <div class="car-meta-item">
+                            <i class="fas fa-gas-pump"></i>
+                            <span id="car-fuel">الوقود</span>
+                        </div>
+                    </div>
+                    
+                    <div class="car-description">
+                        <p id="car-description">جاري تحميل وصف السيارة...</p>
+                    </div>
+                    
+                    <div class="car-features">
+                        <h3>المواصفات الرئيسية</h3>
+                        <ul class="features-list" id="car-features">
+                            <!-- Features will be loaded dynamically via JavaScript -->
+                        </ul>
+                    </div>
+                    
+                    <div class="car-actions">
+                        <a href="#" class="btn-primary">احجز تجربة قيادة</a>
+                        <a href="#" class="btn-secondary">استفسر الآن</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Fullscreen Gallery -->
+    <div class="fullscreen-gallery">
+        <div class="close-fullscreen">
+            <i class="fas fa-times"></i>
+        </div>
+        <div class="swiper fullscreen-swiper">
+            <div class="swiper-wrapper">
+                <!-- Fullscreen images will be loaded dynamically via JavaScript -->
+            </div>
+            <div class="swiper-button-next"></div>
+            <div class="swiper-button-prev"></div>
+        </div>
+        <div class="fullscreen-controls">
+            <button class="fullscreen-button fullscreen-prev">
+                <i class="fas fa-chevron-right"></i>
+            </button>
+            <button class="fullscreen-button fullscreen-next">
+                <i class="fas fa-chevron-left"></i>
+            </button>
+        </div>
+    </div>
+
+    <!-- Footer -->
+    <footer>
+        <div class="container">
+            <div class="footer-content">
+                <div class="footer-logo">
+                    <h2>المسلمي للسيارات</h2>
+                    <p>التميز في السيارات الفاخرة منذ 1998</p>
+                    <div class="social-links">
+                        <a href="#"><i class="fab fa-facebook-f"></i></a>
+                        <a href="#"><i class="fab fa-instagram"></i></a>
+                        <a href="#"><i class="fab fa-twitter"></i></a>
+                        <a href="#"><i class="fab fa-youtube"></i></a>
+                        <a href="#"><i class="fab fa-linkedin-in"></i></a>
+                    </div>
+                </div>
+                <div class="footer-links">
+                    <div class="footer-links-column">
+                        <h3>روابط سريعة</h3>
+                        <ul>
+                            <li><a href="index.html">الرئيسية</a></li>
+                            <li><a href="inventory.html">المخزون</a></li>
+                            <li><a href="index.html#services">الخدمات</a></li>
+                            <li><a href="index.html#about">من نحن</a></li>
+                            <li><a href="index.html#contact">تواصل معنا</a></li>
+                        </ul>
+                    </div>
+                    <div class="footer-links-column">
+                        <h3>السيارات</h3>
+                        <ul>
+                            <li><a href="#">السيارات الجديدة</a></li>
+                            <li><a href="#">سيارات سيدان فاخرة</a></li>
+                            <li><a href="#">سيارات دفع رباعي فاخرة</a></li>
+                            <li><a href="#">سيارات رياضية</a></li>
+                            <li><a href="#">سيارات كهربائية</a></li>
+                        </ul>
+                    </div>
+                    <div class="footer-links-column">
+                        <h3>الخدمات</h3>
+                        <ul>
+                            <li><a href="#">التمويل</a></li>
+                            <li><a href="#">الصيانة</a></li>
+                            <li><a href="#">قطع الغيار والإكسسوارات</a></li>
+                            <li><a href="#">الاستبدال</a></li>
+                            <li><a href="#">حماية السيارة</a></li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+            <div class="footer-bottom">
+                <p>&copy; 2023 المسلمى للسيارات معرض السيارات الفاخرة. جميع الحقوق محفوظة.</p>
+                <div class="footer-bottom-links">
+                    <a href="#">سياسة الخصوصية</a>
+                    <a href="#">الشروط والأحكام</a>
+                    <a href="#">خريطة الموقع</a>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+    <script src="https://cdn.jsdelivr.net/npm/swiper@10/swiper-bundle.min.js"></script>
+    <script src="js/script.js"></script>
+    <script>
+        // Car data (in a real application, this would come from a database)
+        const carsData = [
+            {
+                id: 1,
+                title: "Rolls-Royce Cullinan Black Badge",
+                price: "£495,000",
+                year: "2023",
+                mileage: "1,200 mi",
+                fuel: "Petrol",
+                description: "The Rolls-Royce Cullinan Black Badge is the darkest, most urban expression of a Black Badge motor car yet. With a 6.75-litre V12 engine delivering 600 horsepower, this SUV combines unparalleled luxury with impressive performance. The interior features handcrafted leather, exquisite wood veneers, and state-of-the-art technology.",
+                features: [
+                    "6.75L V12 Twin-Turbo Engine",
+                    "600 Horsepower",
+                    "All-Wheel Drive",
+                    "Starlight Headliner",
+                    "Bespoke Audio System",
+                    "Panoramic Sunroof",
+                    "Night Vision with Pedestrian Recognition",
+                    "Rear Theater Configuration",
+                    "Lambswool Floor Mats",
+                    "Illuminated Fascia"
+                ],
+                images: [
+                    "images/cars/rolls-royce-cullinan-black-badge/image 1.webp",
+                    "images/cars/rolls-royce-cullinan-black-badge/image 2.webp",
+                    "images/cars/rolls-royce-cullinan-black-badge/image 3.webp",
+                    "images/cars/rolls-royce-cullinan-black-badge/image 4.webp",
+                    "images/cars/rolls-royce-cullinan-black-badge/image 5.webp"
+                ]
+            },
+            {
+                id: 2,
+                title: "Ferrari SF90 Stradale",
+                price: "£675,000",
+                year: "2022",
+                mileage: "950 mi",
+                fuel: "Hybrid",
+                description: "The Ferrari SF90 Stradale is the most powerful Ferrari road car ever built. This plug-in hybrid features a twin-turbocharged V8 engine combined with three electric motors to produce a staggering 986 horsepower. With its advanced aerodynamics and cutting-edge technology, the SF90 represents the pinnacle of Ferrari engineering.",
+                features: [
+                    "4.0L Twin-Turbo V8 + 3 Electric Motors",
+                    "986 Combined Horsepower",
+                    "0-60 mph in 2.5 seconds",
+                    "All-Wheel Drive",
+                    "8-Speed Dual-Clutch Transmission",
+                    "Digital Dashboard",
+                    "Carbon Fiber Body Components",
+                    "Assetto Fiorano Package Available",
+                    "15.5 kWh Lithium-ion Battery",
+                    "Electric-only Range of 16 miles"
+                ],
+                images: [
+                    "images/cars/ferrari-sf90-stradale/image 1.webp",
+                    "images/cars/ferrari-sf90-stradale/image 2.webp",
+                    "images/cars/ferrari-sf90-stradale/image 3.webp",
+                    "images/cars/ferrari-sf90-stradale/image 4.webp",
+                    "images/cars/ferrari-sf90-stradale/image 5.webp"
+                ]
+            },
+            {
+                id: 3,
+                title: "Lamborghini Aventador LP780-4 Ultimae Roadster",
+                price: "£825,000",
+                year: "2022",
+                mileage: "500 mi",
+                fuel: "Petrol",
+                description: "The Lamborghini Aventador LP780-4 Ultimae represents the grand finale of the iconic Aventador lineage. As the last naturally-aspirated V12 Lamborghini, it combines the best elements of all previous versions. With 780 horsepower, it's the most powerful Aventador ever produced, offering unmatched performance and the unmistakable sound of a pure V12 engine.",
+                features: [
+                    "6.5L Naturally-Aspirated V12 Engine",
+                    "780 Horsepower",
+                    "0-60 mph in 2.8 seconds",
+                    "All-Wheel Drive",
+                    "7-Speed ISR Transmission",
+                    "Carbon Fiber Monocoque",
+                    "Adaptive Magneto-Rheological Suspension",
+                    "Carbon Ceramic Brakes",
+                    "Scissor Doors",
+                    "Limited to 600 Units Worldwide"
+                ],
+                images: [
+                    "images/cars/lamborghini-aventador-lp780-4-ultimae-roadster/image 1.webp",
+                    "images/cars/lamborghini-aventador-lp780-4-ultimae-roadster/image 2.webp",
+                    "images/cars/lamborghini-aventador-lp780-4-ultimae-roadster/image 3.webp",
+                    "images/cars/lamborghini-aventador-lp780-4-ultimae-roadster/image 4.webp",
+                    "images/cars/lamborghini-aventador-lp780-4-ultimae-roadster/image 5.webp"
+                ]
+            },
+            {
+                id: 4,
+                title: "Lamborghini Huracan Tecnica",
+                price: "£245,000",
+                year: "2023",
+                mileage: "800 mi",
+                fuel: "Petrol",
+                description: "The Lamborghini Huracan Tecnica represents the perfect balance between the track-focused STO and the more road-oriented EVO models. With a naturally aspirated 5.2-liter V10 engine producing 640 horsepower, the Tecnica delivers exhilarating performance with improved aerodynamics and handling. The distinctive design and cutting-edge technology make it a standout in the Lamborghini lineup.",
+                features: [
+                    "5.2L Naturally-Aspirated V10 Engine",
+                    "640 Horsepower",
+                    "0-60 mph in 3.2 seconds",
+                    "Rear-Wheel Drive",
+                    "7-Speed Dual-Clutch Transmission",
+                    "LDVI (Lamborghini Dinamica Veicolo Integrata)",
+                    "Carbon Ceramic Brakes",
+                    "Rear-Wheel Steering",
+                    "Lightweight Carbon Fiber Components",
+                    "Lamborghini Infotainment System"
+                ],
+                images: [
+                    "images/cars/lamborghini-huracan-tecnica/image 1.webp",
+                    "images/cars/lamborghini-huracan-tecnica/image 2.webp",
+                    "images/cars/lamborghini-huracan-tecnica/image 3.webp",
+                    "images/cars/lamborghini-huracan-tecnica/image 4.webp",
+                    "images/cars/lamborghini-huracan-tecnica/image 5.webp"
+                ]
+            },
+            {
+                id: 5,
+                title: "Mercedes-Benz AMG G63",
+                price: "£225,000",
+                year: "2023",
+                mileage: "1,500 mi",
+                fuel: "Petrol",
+                description: "The Mercedes-Benz AMG G63 combines legendary off-road capability with luxurious comfort and impressive performance. Powered by a handcrafted 4.0-liter biturbo V8 engine producing 577 horsepower, this iconic SUV delivers exceptional acceleration and capability. The distinctive boxy design and premium interior make the G63 a status symbol that stands out in any setting.",
+                features: [
+                    "4.0L Biturbo V8 Engine",
+                    "577 Horsepower",
+                    "0-60 mph in 4.5 seconds",
+                    "AMG SPEEDSHIFT TCT 9-Speed Transmission",
+                    "AMG Performance 4MATIC All-Wheel Drive",
+                    "Three Locking Differentials",
+                    "AMG Ride Control Suspension",
+                    "Burmester Surround Sound System",
+                    "Nappa Leather Interior",
+                    "AMG Carbon Fiber Trim"
+                ],
+                images: [
+                    "images/cars/mercedes-benz-amg-g63/image 1.webp",
+                    "images/cars/mercedes-benz-amg-g63/image 2.webp",
+                    "images/cars/mercedes-benz-amg-g63/image 3.webp",
+                    "images/cars/mercedes-benz-amg-g63/image 4.webp",
+                    "images/cars/mercedes-benz-amg-g63/image 5.webp"
+                ]
+            },
+            {
+                id: 6,
+                title: "Ferrari 488 GTB",
+                price: "£395,000",
+                year: "2022",
+                mileage: "750 mi",
+                fuel: "Petrol",
+                description: "The Ferrari 488 GTB represents a new chapter in Ferrari's 8-cylinder history. With a twin-turbocharged 3.9-liter V8 engine producing 661 horsepower, this mid-engine supercar delivers breathtaking performance and responsive handling. The aerodynamic design and advanced technology make the 488 GTB a true driver's car, offering an exhilarating experience on both road and track.",
+                features: [
+                    "3.9L Twin-Turbo V8 Engine",
+                    "661 Horsepower",
+                    "0-60 mph in 3.0 seconds",
+                    "7-Speed Dual-Clutch Transmission",
+                    "Electronic Limited-Slip Differential",
+                    "Magnetorheological Suspension Control",
+                    "Carbon-Ceramic Brakes",
+                    "Ferrari's Side Slip Control System",
+                    "Active Aerodynamics",
+                    "Ferrari Infotainment System"
+                ],
+                images: [
+                    "images/cars/ferrari-488-gtb/image 1.webp",
+                    "images/cars/ferrari-488-gtb/image 2.webp",
+                    "images/cars/ferrari-488-gtb/image 3.webp",
+                    "images/cars/ferrari-488-gtb/image 4.webp",
+                    "images/cars/ferrari-488-gtb/image 5.webp"
+                ]
+            },
+            {
+                id: 7,
+                title: "Porsche 911 992 Turbo S",
+                price: "£195,000",
+                year: "2022",
+                mileage: "1,200 mi",
+                fuel: "Petrol",
+                description: "The Porsche 911 Turbo S represents the pinnacle of the iconic 911 lineup. With a twin-turbocharged 3.8-liter flat-six engine producing 640 horsepower, the Turbo S delivers supercar performance with everyday usability. The advanced all-wheel drive system and sophisticated aerodynamics ensure exceptional handling and stability, making it one of the most capable sports cars on the market.",
+                features: [
+                    "3.8L Twin-Turbo Flat-Six Engine",
+                    "640 Horsepower",
+                    "0-60 mph in 2.6 seconds",
+                    "8-Speed PDK Dual-Clutch Transmission",
+                    "All-Wheel Drive with Porsche Traction Management",
+                    "Porsche Active Suspension Management",
+                    "Porsche Ceramic Composite Brakes",
+                    "Rear-Axle Steering",
+                    "Sport Chrono Package",
+                    "Adaptive Aerodynamics"
+                ],
+                images: [
+                    "images/cars/porsche-911-992-turbo-s/image 1.webp",
+                    "images/cars/porsche-911-992-turbo-s/image 2.webp",
+                    "images/cars/porsche-911-992-turbo-s/image 3.webp",
+                    "images/cars/porsche-911-992-turbo-s/image 4.webp",
+                    "images/cars/porsche-911-992-turbo-s/image 5.webp"
+                ]
+            },
+            {
+                id: 8,
+                title: "Land Rover Range Rover SV 4.4 P530 V8",
+                price: "£215,000",
+                year: "2023",
+                mileage: "500 mi",
+                fuel: "Petrol",
+                description: "The Range Rover SV represents the pinnacle of luxury in the Land Rover lineup. This flagship model combines unmatched off-road capability with limousine-like luxury and comfort. Featuring a powerful 4.4-liter twin-turbocharged V8 engine, the SV delivers effortless performance both on and off the road. The handcrafted interior showcases the finest materials and craftsmanship, offering a truly bespoke luxury experience.",
+                features: [
+                    "4.4L Twin-Turbo V8 Engine",
+                    "523 Horsepower",
+                    "All-Wheel Drive",
+                    "Executive Class Rear Seats",
+                    "Semi-Aniline Leather Interior",
+                    "Meridian Signature Sound System",
+                    "Refrigerated Compartment",
+                    "Power-Closing Rear Doors",
+                    "Active Noise Cancellation",
+                    "SV Bespoke Commissioning"
+                ],
+                images: [
+                    "images/cars/land-rover-range-rover-sv-p530-v8/image 1.webp",
+                    "images/cars/land-rover-range-rover-sv-p530-v8/image 2.webp",
+                    "images/cars/land-rover-range-rover-sv-p530-v8/image 3.webp",
+                    "images/cars/land-rover-range-rover-sv-p530-v8/image 4.webp",
+                    "images/cars/land-rover-range-rover-sv-p530-v8/image 5.webp"
+                ]
+            }
+        ];
+
+        // Get car ID from URL
+        const urlParams = new URLSearchParams(window.location.search);
+        const carId = parseInt(urlParams.get('id')) || 1; // Default to first car if no ID provided
+
+        // Find the car data
+        const car = carsData.find(c => c.id === carId) || carsData[0];
+
+        // Update page title
+        document.title = car.title + " - المسلمى للسيارات";
+
+        // Populate car details
+        document.getElementById('car-title').textContent = car.title;
+        document.getElementById('car-price').textContent = car.price;
+        document.getElementById('car-year').textContent = car.year + " م";
+        document.getElementById('car-mileage').textContent = car.mileage.replace('mi', 'كم');
+        document.getElementById('car-fuel').textContent = 
+            car.fuel === "Petrol" ? "بنزين" : 
+            car.fuel === "Hybrid" ? "هايبرد" : 
+            car.fuel === "Diesel" ? "ديزل" : car.fuel;
+        document.getElementById('car-description').textContent = car.description;
+
+        // Populate features
+        const featuresContainer = document.getElementById('car-features');
+        featuresContainer.innerHTML = car.features.map(feature => `<li><i class="fas fa-check"></i> ${feature}</li>`).join('');
+
+        // Update total slides counter
+        document.getElementById('total-slides').textContent = car.images.length;
+
+        // Populate gallery images
+        const mainGalleryWrapper = document.querySelector('.gallery-main .swiper-wrapper');
+        const thumbsGalleryWrapper = document.querySelector('.gallery-thumbs .swiper-wrapper');
+        const fullscreenGalleryWrapper = document.querySelector('.fullscreen-swiper .swiper-wrapper');
+
+        // Clear existing slides
+        mainGalleryWrapper.innerHTML = '';
+        thumbsGalleryWrapper.innerHTML = '';
+        fullscreenGalleryWrapper.innerHTML = '';
+
+        // Add new slides
+        car.images.forEach(image => {
+            // Main gallery
+            mainGalleryWrapper.innerHTML += `
+                <div class="swiper-slide">
+                    <img src="${image}" alt="${car.title}">
+                </div>
+            `;
+            
+            // Thumbs gallery
+            thumbsGalleryWrapper.innerHTML += `
+                <div class="swiper-slide">
+                    <img src="${image}" alt="${car.title}">
+                </div>
+            `;
+            
+            // Fullscreen gallery
+            fullscreenGalleryWrapper.innerHTML += `
+                <div class="swiper-slide">
+                    <img src="${image}" alt="${car.title}">
+                </div>
+            `;
+        });
+
+        // Initialize Swiper instances after adding slides
+        const thumbsGallery = new Swiper('.gallery-thumbs', {
+            spaceBetween: 10,
+            slidesPerView: 4,
+            freeMode: true,
+            watchSlidesProgress: true,
+        });
+
+        const mainGallery = new Swiper('.gallery-main', {
+            spaceBetween: 10,
+            navigation: {
+                nextEl: '.swiper-button-next',
+                prevEl: '.swiper-button-prev',
+            },
+            thumbs: {
+                swiper: thumbsGallery
+            },
+            on: {
+                slideChange: function() {
+                    document.getElementById('current-slide').textContent = this.activeIndex + 1;
+                }
+            }
+        });
+
+        // Gallery controls
+        document.querySelector('.gallery-prev').addEventListener('click', () => {
+            mainGallery.slidePrev();
+        });
+
+        document.querySelector('.gallery-next').addEventListener('click', () => {
+            mainGallery.slideNext();
+        });
+
+        // Fullscreen functionality
+        const fullscreenGallery = document.querySelector('.fullscreen-gallery');
+        const fullscreenSwiper = new Swiper('.fullscreen-swiper', {
+            spaceBetween: 10,
+            navigation: {
+                nextEl: '.swiper-button-next',
+                prevEl: '.swiper-button-prev',
+            }
+        });
+
+        document.querySelector('.gallery-fullscreen').addEventListener('click', () => {
+            fullscreenGallery.style.display = 'block';
+            document.body.style.overflow = 'hidden';
+            fullscreenSwiper.update(); // Update swiper after making it visible
+        });
+
+        document.querySelector('.close-fullscreen').addEventListener('click', () => {
+            fullscreenGallery.style.display = 'none';
+            document.body.style.overflow = 'auto';
+        });
+
+        // Close fullscreen gallery with Escape key
+        document.addEventListener('keydown', (e) => {
+            if (e.key === 'Escape' && fullscreenGallery.style.display === 'block') {
+                fullscreenGallery.style.display = 'none';
+                document.body.style.overflow = 'auto';
+            }
+        });
+    </script>
+</body>
+</html>
