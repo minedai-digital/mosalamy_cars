@@ -544,28 +544,34 @@
 document.getElementById("contactForm").addEventListener("submit", function(e) {
     e.preventDefault();
 
-    fetch("https://script.google.com/macros/s/AKfycbxm3vRNFvX9irFL7o-usyUqJ2V3ZZB7zPRPjrJRghN4eaPE2GuRxoocjg3J8-RvhGdNSg/exec", {
+    const formData = {
+        name: document.getElementById("name").value,
+        email: document.getElementById("email").value,
+        phone: document.getElementById("phone").value,
+        interest: document.getElementById("interest").value,
+        message: document.getElementById("message").value
+    };
+
+    fetch("https://mosalamy.netlify.app/.netlify/functions/form-proxy", {
         method: "POST",
-        headers: { "Content-Type": "application/x-www-form-urlencoded" },
-        body: new URLSearchParams({
-            name: document.getElementById("name").value,
-            email: document.getElementById("email").value,
-            phone: document.getElementById("phone").value,
-            interest: document.getElementById("interest").value,
-            message: document.getElementById("message").value
-        })
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(formData)
     })
-    .then(res => res.text())
-    .then(data => {
-        alert("✅ تم إرسال رسالتك بنجاح!");
-        document.getElementById("contactForm").reset();
+    .then(res => {
+        if (res.ok) {
+            alert("✅ تم إرسال رسالتك بنجاح!");
+            document.getElementById("contactForm").reset();
+        } else {
+            alert("❌ حدث خطأ أثناء الإرسال");
+        }
     })
     .catch(err => {
-        alert("❌ حدث خطأ، حاول مرة أخرى");
+        alert("⚠️ خطأ في الاتصال بالسيرفر");
         console.error(err);
     });
 });
 </script>
+
 
 </body>
 </html>
