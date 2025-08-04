@@ -1,38 +1,36 @@
+const fetch = require("node-fetch");
+
 exports.handler = async (event) => {
   if (event.httpMethod !== "POST") {
     return {
       statusCode: 405,
-      body: JSON.stringify({ error: "Method Not Allowed" })
+      body: "Method Not Allowed",
     };
   }
 
   try {
-    const body = JSON.parse(event.body);
+    const data = JSON.parse(event.body);
 
-    // 🔹 ضع رابط Google Apps Script Web App هنا
-    const scriptUrl = "https://script.google.com/macros/s/AKfycbxm3vRNFvX9irFL7o-usyUqJ2V3ZZB7zPRPjrJRghN4eaPE2GuRxoocjg3J8-RvhGdNSg/exec";
+    // رابط Google Script Web App
+    const googleScriptUrl = "https://script.google.com/macros/s/AKfycbyfJKJNMBWPeijToHUJ7uPAElM4AAAaVeo7WKRIJCq45Hnh0Szu6uuOLdaeNZe4n3Zt4Q/exec";
 
-    const response = await fetch(scriptUrl, {
+    const formData = new URLSearchParams(data);
+
+    const response = await fetch(googleScriptUrl, {
       method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify(body)
+      body: formData,
     });
 
-    const data = await response.text();
+    const text = await response.text();
 
     return {
       statusCode: 200,
-      headers: {
-        "Access-Control-Allow-Origin": "*", // حل مشكلة CORS
-        "Access-Control-Allow-Headers": "Content-Type"
-      },
-      body: data
+      body: text,
     };
   } catch (error) {
     return {
       statusCode: 500,
-      body: JSON.stringify({ error: error.message })
+      body: "Error: " + error.message,
     };
   }
 };
-
