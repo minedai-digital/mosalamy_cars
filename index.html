@@ -540,5 +540,32 @@
     </footer>
 
     <script src="js/script.js"></script>
+    <script>
+document.getElementById("contactForm").addEventListener("submit", function(e) {
+    e.preventDefault();
+
+    fetch("https://script.google.com/macros/s/AKfycbxm3vRNFvX9irFL7o-usyUqJ2V3ZZB7zPRPjrJRghN4eaPE2GuRxoocjg3J8-RvhGdNSg/exec", {
+        method: "POST",
+        headers: { "Content-Type": "application/x-www-form-urlencoded" },
+        body: new URLSearchParams({
+            name: document.getElementById("name").value,
+            email: document.getElementById("email").value,
+            phone: document.getElementById("phone").value,
+            interest: document.getElementById("interest").value,
+            message: document.getElementById("message").value
+        })
+    })
+    .then(res => res.text())
+    .then(data => {
+        alert("✅ تم إرسال رسالتك بنجاح!");
+        document.getElementById("contactForm").reset();
+    })
+    .catch(err => {
+        alert("❌ حدث خطأ، حاول مرة أخرى");
+        console.error(err);
+    });
+});
+</script>
+
 </body>
 </html>
