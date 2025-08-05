@@ -4,7 +4,7 @@ const fetch = require("node-fetch");
 const ALLOWED_ORIGIN = "https://minedai-digital.github.io";
 
 exports.handler = async (event) => {
-  const origin = event.headers.origin;
+  const origin = event.headers.origin || "";
 
   // هيدرز CORS
   const headers = {
@@ -22,8 +22,8 @@ exports.handler = async (event) => {
     };
   }
 
-  // منع أي موقع غير مسموح
-  if (origin !== ALLOWED_ORIGIN) {
+  // التحقق من أن الطلب من موقعك فقط
+  if (origin && origin !== ALLOWED_ORIGIN) {
     return {
       statusCode: 403,
       headers,
@@ -41,13 +41,26 @@ exports.handler = async (event) => {
   }
 
   try {
-    const data = JSON.parse(event.body);
+    // قراءة البيانات من JSON
+    let data;
+    try {
+      data = JSON.parse(event.body);
+    } catch (err) {
+      return {
+        statusCode: 400,
+        headers,
+        body: "Invalid JSON format",
+      };
+    }
 
     // رابط Google Script Web App
-    const googleScriptUrl = "https://script.google.com/macros/s/AKfycbzsiLe90M9m7025VEuidmgueXGVf308ZsVLvTfoL_0_QdK5DLiMrnKGwtheh5Y8r6BvlA/exec";
+    const googleScriptUrl =
+      "https://script.google.com/macros/s/AKfycbzsiLe90M9m7025VEuidmgueXGVf308ZsVLvTfoL_0_QdK5DLiMrnKGwtheh5Y8r6BvlA/exec";
 
+    // تحويل البيانات لصيغة form-urlencoded
     const formData = new URLSearchParams(data);
 
+    // إرسال الطلب إلى Google Script
     const response = await fetch(googleScriptUrl, {
       method: "POST",
       body: formData,
