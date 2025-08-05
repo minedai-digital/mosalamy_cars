@@ -44,7 +44,7 @@ exports.handler = async (event) => {
     const data = JSON.parse(event.body);
 
     // رابط Google Script Web App
-    const googleScriptUrl = "https://script.google.com/macros/s/AKfycbyfJKJNMBWPeijToHUJ7uPAElM4AAAaVeo7WKRIJCq45Hnh0Szu6uuOLdaeNZe4n3Zt4Q/exec";
+    const googleScriptUrl = "https://script.google.com/macros/s/AKfycbzsiLe90M9m7025VEuidmgueXGVf308ZsVLvTfoL_0_QdK5DLiMrnKGwtheh5Y8r6BvlA/exec";
 
     const formData = new URLSearchParams(data);
 
