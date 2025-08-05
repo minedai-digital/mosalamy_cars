@@ -1,19 +1,17 @@
 const fetch = require("node-fetch");
 
-// رابط الموقع المسموح له يرسل طلبات
 const ALLOWED_ORIGIN = "https://minedai-digital.github.io";
 
 exports.handler = async (event) => {
-  const origin = event.headers.origin || "";
+  const origin = event.headers.origin;
 
-  // هيدرز CORS
   const headers = {
     "Access-Control-Allow-Origin": ALLOWED_ORIGIN,
     "Access-Control-Allow-Methods": "POST, OPTIONS",
     "Access-Control-Allow-Headers": "Content-Type",
   };
 
-  // إذا جاء طلب OPTIONS (Preflight) من المتصفح
+  // رد على طلب OPTIONS (Preflight)
   if (event.httpMethod === "OPTIONS") {
     return {
       statusCode: 200,
@@ -22,8 +20,8 @@ exports.handler = async (event) => {
     };
   }
 
-  // التحقق من أن الطلب من موقعك فقط
-  if (origin && origin !== ALLOWED_ORIGIN) {
+  // السماح فقط للموقع المحدد
+  if (origin !== ALLOWED_ORIGIN) {
     return {
       statusCode: 403,
       headers,
@@ -41,29 +39,21 @@ exports.handler = async (event) => {
   }
 
   try {
-    // قراءة البيانات من JSON
-    let data;
-    try {
-      data = JSON.parse(event.body);
-    } catch (err) {
-      return {
-        statusCode: 400,
-        headers,
-        body: "Invalid JSON format",
-      };
-    }
+    // استقبال البيانات كـ JSON من الموقع
+    const data = JSON.parse(event.body);
+
+    // تجهيز البيانات للإرسال إلى Google Script كـ x-www-form-urlencoded
+    const formData = new URLSearchParams(data);
 
     // رابط Google Script Web App
     const googleScriptUrl =
       "https://script.google.com/macros/s/AKfycbzsiLe90M9m7025VEuidmgueXGVf308ZsVLvTfoL_0_QdK5DLiMrnKGwtheh5Y8r6BvlA/exec";
 
-    // تحويل البيانات لصيغة form-urlencoded
-    const formData = new URLSearchParams(data);
-
-    // إرسال الطلب إلى Google Script
+    // إرسال البيانات
     const response = await fetch(googleScriptUrl, {
       method: "POST",
-      body: formData,
+      headers: { "Content-Type": "application/x-www-form-urlencoded" },
+      body: formData.toString(),
     });
 
     const text = await response.text();
