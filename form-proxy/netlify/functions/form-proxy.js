@@ -1,5 +1,6 @@
 const fetch = require("node-fetch");
 
+// رابط موقعك المسموح له فقط
 const ALLOWED_ORIGIN = "https://minedai-digital.github.io";
 
 exports.handler = async (event) => {
@@ -11,7 +12,7 @@ exports.handler = async (event) => {
     "Access-Control-Allow-Headers": "Content-Type",
   };
 
-  // رد على طلب OPTIONS (Preflight)
+  // الرد على طلب الـ OPTIONS (Preflight)
   if (event.httpMethod === "OPTIONS") {
     return {
       statusCode: 200,
@@ -20,7 +21,7 @@ exports.handler = async (event) => {
     };
   }
 
-  // السماح فقط للموقع المحدد
+  // السماح فقط لموقعك
   if (origin !== ALLOWED_ORIGIN) {
     return {
       statusCode: 403,
@@ -39,21 +40,19 @@ exports.handler = async (event) => {
   }
 
   try {
-    // استقبال البيانات كـ JSON من الموقع
+    // استقبال البيانات كـ form-urlencoded مباشرة
     const data = JSON.parse(event.body);
-
-    // تجهيز البيانات للإرسال إلى Google Script كـ x-www-form-urlencoded
-    const formData = new URLSearchParams(data);
+    const formData = new URLSearchParams(data).toString();
 
     // رابط Google Script Web App
     const googleScriptUrl =
       "https://script.google.com/macros/s/AKfycbzsiLe90M9m7025VEuidmgueXGVf308ZsVLvTfoL_0_QdK5DLiMrnKGwtheh5Y8r6BvlA/exec";
 
-    // إرسال البيانات
+    // إرسال الطلب لجوجل شيت
     const response = await fetch(googleScriptUrl, {
       method: "POST",
       headers: { "Content-Type": "application/x-www-form-urlencoded" },
-      body: formData.toString(),
+      body: formData,
     });
 
     const text = await response.text();
